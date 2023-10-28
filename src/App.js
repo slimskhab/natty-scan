@@ -6,9 +6,9 @@ import Profile from './view/pages/profile/Profile';
 import { Route,Routes,Link } from 'react-router-dom';
 function App() {
   return (
-    <div className="App" style={{fontFamily:"'Montserrat', sans-serif;",color:"black"}}>
+    <div className="App">
    
-<Routes>
+<Routes >
   <Route path= "/" element ={<HomePage/>}  />
   <Route path= "/profile/:id" element ={<Profile/>}  />
 </Routes>

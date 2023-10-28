@@ -1,7 +1,6 @@
 import React from 'react';
 import "./Milestone.css";
 function Milestone(props) {
-    console.log(props.isActive);
     return (
         <div className="milestone-box">
             <div className='milestone' style={{background:props.isActive?props.milestoneActiveColor:"white"}}>
@@ -16,7 +15,10 @@ function Milestone(props) {
                         {props.milestoneName}
                     </span>
                 </div>
-                <span className='milestone-range'>{props.milestoneRange}</span>
+                {
+                    props.milestoneRange[1]?<span className='milestone-range'>{props.milestoneRange[0]}$ to {props.milestoneRange[1]}$</span>:<span className='milestone-range'>{props.milestoneRange[0]}$+</span>
+                }
+                
             </div>
         </div>
     );

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 const ImageSwapperSlice=createSlice({
-    name:"search",
+    name:"imageSwapper",
     initialState:{
         isLoading:false,
         data:[],

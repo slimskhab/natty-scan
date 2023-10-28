@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import "./MostDonated.css"
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { userData } from '../../../Data';
+import { setContainerRef } from '../../../features/InPageNav';
+import { useDispatch } from 'react-redux';
 function MostDonated(props) {
     const navigate = useNavigate();
     const [deviceWidth, setDeviceWidth] = useState(window.innerWidth);
@@ -34,7 +36,7 @@ function MostDonated(props) {
                         if (index < 3) {
                             var igLink = `https://instagram.com/${user.ig}`;
                             return (
-                                <div className="user-card">
+                                <div className="user-card" key={user.id}>
 
                                     <img src="/user.png" alt="name" onClick={() => {
                                         navigate(`/profile/${user.id}`);
@@ -65,7 +67,7 @@ function MostDonated(props) {
                         if (index >= 3) {
                             var igLink = `https://instagram.com/${user.ig}`;
                             return (
-                                <div className="user-card">
+                                <div className="user-card" key={user.id}>
 
                                     <img src="/user.png" alt="name" onClick={() => {
                                         navigate(`/profile/${user.id}`);
@@ -76,7 +78,8 @@ function MostDonated(props) {
                                         <a href={igLink} target="_blank"><span className='instagram-text'>@{user.ig}</span></a>
                                         <div className='custom-button'>
                                             <span className='button-text-profile' onClick={() => {
-                                                navigate(`/profile/${user.id}`);
+ navigate(`/profile/${user.id}`);
+
                                             }}>
                                                 View Profile
                                             </span>

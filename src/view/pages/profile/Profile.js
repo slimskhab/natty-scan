@@ -6,19 +6,50 @@ import Milestone from '../../components/milestone/Milestone';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectImage, setImages, swapImageLeft, swapImageRight } from '../../../features/ImageSwapper';
 import { useEffect } from 'react';
-
-function Profile(props) {
-    var donation = "50";
+import { useParams } from 'react-router-dom';
+import { userData } from '../../../Data';
+import { milestones } from '../../../Consts';
+function Profile() {
+    var donation = "80";
+    const params=useParams();
+    const user= userData.find((element) => element.id== params.id);
+    
     var firstMilestoneIsActive = false;
     var secondMilestoneIsActive = false;
     var thirdMilestoneIsActive = false;
     var forthMilestoneIsActive = false;
+    var milestoneColor;
     const dispatch = useDispatch();
-
     function changeMilestone() {
-        firstMilestoneIsActive = true;
+        if(user.totalDonations<milestones[0].milestoneRange[1]){
+            donation=(user.totalDonations*100)/milestones[0].milestoneRange[1];
+            milestoneColor=milestones[0].milestoneColor;
+            firstMilestoneIsActive = true;
+        }else if((user.totalDonations<milestones[1].milestoneRange[1]) && (user.totalDonations>milestones[1].milestoneRange[0])){
+            donation=((user.totalDonations-milestones[0].milestoneRange[1])*100)/(milestones[1].milestoneRange[1]-milestones[1].milestoneRange[0])
+            milestoneColor=milestones[1].milestoneColor;
+
+            secondMilestoneIsActive=true;
+        }
+        else if((user.totalDonations<milestones[2].milestoneRange[1]) && (user.totalDonations>milestones[2].milestoneRange[0])){
+            donation=((user.totalDonations-milestones[2].milestoneRange[0])*100)/(milestones[2].milestoneRange[1]-milestones[2].milestoneRange[0])
+            milestoneColor=milestones[2].milestoneColor;
+
+            thirdMilestoneIsActive=true;
+        }else{
+            donation="100";
+            milestoneColor=milestones[3].milestoneColor;
+
+            forthMilestoneIsActive=true;
+        }
+        console.log(milestoneColor);
     }
+
+    
+function initUser(){
     changeMilestone();
+}
+initUser();
     var firstImageLink = "https://images.unsplash.com/photo-1481349518771-20055b2a7b24?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cmFuZG9tfGVufDB8fDB8fHww"
     var secondImageLink = "https://repository-images.githubusercontent.com/260096455/47f1b200-8b2e-11ea-8fa1-ab106189aeb0"
     var thirdImageLink = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3m18L2DEROZg6VhtnYKc05oTvqkQXR3qclDy6Z1L9PQ&s"
@@ -32,7 +63,7 @@ function Profile(props) {
 
     useEffect(() => {
         dispatch(setImages([firstImageLink, secondImageLink, thirdImageLink, forthImageLink, fifthImageLink]));
-    }, [])
+    },[])
 
 
     return (
@@ -46,7 +77,7 @@ function Profile(props) {
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none" onClick={() => {
                             dispatch(swapImageLeft());
                         }}>
-                            <path d="M30 12L18 24L30 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M30 12L18 24L30 36" stroke="#001F3F" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </div>
                     <div>
@@ -77,7 +108,7 @@ function Profile(props) {
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none" onClick={() => {
                             dispatch(swapImageRight())
                         }}>
-                            <path d="M18 12L30 24L18 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M18 12L30 24L18 36" stroke="#001F3F" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </div>
 
@@ -158,8 +189,10 @@ function Profile(props) {
                         <div className="progress-box">
                             <span className="mini-title">Donation Progress:</span>
                             <div className="skill-bar">
-                                <span className="progress-per" style={{ width: `${donation}%` }}>
-                                    <span className="tooltips">$95</span>
+                                <span className="progress-per" style={{ width: `${donation}%`,background:`${milestoneColor}` }}>
+                                    <span className="tooltips" style={{right:user.totalDonations>1000?"-25px":"-20px",background:`${milestoneColor}`}}>${user.totalDonations}                                    <div className="tooltipsbefore" style={{background:`${milestoneColor}`}}></div>
+</span>
+
                                 </span>
                             </div>
                         </div>
@@ -168,13 +201,13 @@ function Profile(props) {
                     <div className='milestones-container'>
                         <span className="mini-title">Milestones:</span>
 
-                        <Milestone milestoneName="First Milestone" milestoneNumber="1" milestoneRange="500$ to 1000$" milestoneColor="#26ADEB" milestoneActiveColor="rgba(38, 173, 235, 0.14)" isActive={firstMilestoneIsActive} />
+                        <Milestone milestoneNumber={milestones[0].id} milestoneName={milestones[0].milestoneName}  milestoneRange={milestones[0].milestoneRange} milestoneColor={milestones[0].milestoneColor} milestoneActiveColor={milestones[0].milestoneActiveColor} isActive={firstMilestoneIsActive} />
                         <br></br>
-                        <Milestone milestoneName="Second Milestone" milestoneNumber="2" milestoneRange="1000$ to 2000$" milestoneColor="#FA7193" milestoneActiveColor="rgba(250, 113, 147, 0.14)" isActive={secondMilestoneIsActive} />
+                        <Milestone milestoneNumber={milestones[1].id} milestoneName={milestones[1].milestoneName}  milestoneRange={milestones[1].milestoneRange} milestoneColor={milestones[1].milestoneColor} milestoneActiveColor={milestones[1].milestoneActiveColor} isActive={secondMilestoneIsActive} />
                         <br></br>
-                        <Milestone milestoneName="Third Milestone" milestoneNumber="3" milestoneRange="2000$ to 3000$" milestoneColor="#8183FE" milestoneActiveColor="rgba(129, 131, 254, 0.14)" isActive={thirdMilestoneIsActive} />
+                        <Milestone milestoneNumber={milestones[2].id} milestoneName={milestones[2].milestoneName}  milestoneRange={milestones[2].milestoneRange} milestoneColor={milestones[2].milestoneColor} milestoneActiveColor={milestones[2].milestoneActiveColor} isActive={thirdMilestoneIsActive} />
                         <br></br>
-                        <Milestone milestoneName="Forth Milestone" milestoneNumber="4" milestoneRange="3000$+" milestoneColor="#46DDB9" milestoneActiveColor="rgba(70, 221, 185, 0.14)" isActive={forthMilestoneIsActive} />
+                        <Milestone milestoneNumber={milestones[3].id} milestoneName={milestones[3].milestoneName}  milestoneRange={milestones[3].milestoneRange} milestoneColor={milestones[3].milestoneColor} milestoneActiveColor={milestones[3].milestoneActiveColor} isActive={forthMilestoneIsActive} />
 
                     </div>
                 </div>
@@ -185,7 +218,7 @@ function Profile(props) {
                     <div className='vote-buttons-compact'>
                         <div style={{ width: 48, opacity: 0 }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-                                <path d="M30 12L18 24L30 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M30 12L18 24L30 36" stroke="#001F3F" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </div>
                         <div className='vote-button natty'>
@@ -198,7 +231,7 @@ function Profile(props) {
                         </div>
                         <div style={{ width: 48, opacity: 0 }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-                                <path d="M30 12L18 24L30 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M30 12L18 24L30 36" stroke="#001F3F" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </div>
                     </div>
@@ -216,7 +249,7 @@ function Profile(props) {
                 <div className='additional-infos-container'>
                     <h1 className='profile-title' style={{ textAlign: "start" }}>Additional Information</h1>
                     <br></br>
-                    <p style={{ textAlign: "start" }}>
+                    <p style={{ textAlign: "start",color:"black" }}>
                         {additionalInfos}
                     </p>
                 </div>

@@ -9,17 +9,21 @@ import { Provider } from 'react-redux';
 import searchReducer from "./features/Search";
 import ImageSwapper from './features/ImageSwapper';
 import { BrowserRouter } from 'react-router-dom';
+import InPageNav from './features/InPageNav';
+import ScrollToTop from './Helpers';
 const store=configureStore({
   reducer:{
     searchStore:searchReducer,
-    imageSwapperStore:ImageSwapper
+    imageSwapperStore:ImageSwapper,
+    pageNavStore:InPageNav,
+
   }
 })
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Provider store={store}>    <BrowserRouter><App /></BrowserRouter>
+    <Provider store={store}>    <BrowserRouter><ScrollToTop /><App /></BrowserRouter>
 </Provider>
   </React.StrictMode>
 );
