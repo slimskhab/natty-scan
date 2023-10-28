@@ -4,7 +4,7 @@ import "./HowItWorks.css"
 function HowItWorks(props) {
     return (
         <div className='main-container'>
-            <h1 className="title">How It Works</h1>
+            <h1 className="title" id='#howitworks'>How It Works</h1>
             <p className='text-style'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
             <div className='howitworks-container'>
                 <div className='images-container'>
